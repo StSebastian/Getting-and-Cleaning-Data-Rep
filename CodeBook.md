@@ -9,19 +9,13 @@ subject:        variable for subject id
     levels: 1 to 30
     
 group:          variable indicating test or train group belonging
-    levels: * test
-            * train
+    levels: test, train
     
 y:              id variable for activity
     levels: 1 to 6
     
 activity:       variable with descriptive activity names (generated from variable y)
-    levels: * WALKING
-            * WALKING_UPSTAIRS
-            * WALKING_DOWNSTAIRS
-			* SITTING
-            * STANDING
-            * LAYING
+    levels: WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING
 
 measurement variables:
     tBodyAcc-XYZ, tGravityAcc-XYZ, tBodyAccJerk-XYZ, tBodyGyro-XYZ, tBodyGyroJerk-XYZ
