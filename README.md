@@ -1,130 +1,83 @@
-###**************************************************************************
+# Getting and Cleaning Data: Peer Assessments  
+### Steps to run the code are described below 
 
-information about the functions can be found at the bottom of the script
+information where to find the code in the **run_analysis.R** file are given by the *section-information*
 
-### step one: reading tables
+**Merges the training and the test sets to create one data set.**  
+*section: Merging data*
 
-Set the working directory to the folder containing the following files:"subject_train.txt", "X_train.txt", "y_train.txt", "subject_test.txt", 
-"X_test.txt", "y_test.txt" AND "features.txt".
-
-Please take care that the file "features.txt" containing the list of variable names is also storer
-in the folder.
-
-Following function will automatically read the tables and assign them to predetermined variables
-
-ReadTrain()
-
-ReadTest()
-
-VarNames()
-
-###*************************************************************************
-
-### step two: assembling the first tidy table (all variables/observations, no calculations of means)
-
-The Code will assemble a table calles "TidyTable" which contains all the variables and values for
-all measurements.
-
-
-colnames(X_test) <- varNames[,2]
-
-colnames(X_train) <- varNames[,2]
-
-testTable <- cbind(subject_test,y_test,"test",X_test)
-
-colnames(testTable) <- c("subject","y","group" ,colnames(testTable[,-(1:3)]))
-
-trainTable <- cbind(subject_train,y_train,"train",X_train)
-
-colnames(trainTable) <- c("subject","y", "group",colnames(trainTable[,-(1:3)]))
-
-SumTable <- rbind(testTable,trainTable)
-
-SumTable$activity<-sapply(SumTable$y,activityConv)
-
-TidyTable <- cbind(SumTable[,c("subject","y", "group","activity")],SumTable[,-c(1,2,3,length(SumTable))])
-
-###**********************************************************************
-
-### step three: erasing non mean/sd variables and computing XTable for activities and subjects
-
-The first function creates a table "TableMeanSd" in which all observations/varibles have been erased,
-that do not state mean- or sd-values (point 4 of Course Project Instructions)
-
-Second function creates table "XTable" in which all the average values for each single activity and 
-each single subject have been calculated and assigned to each varible (point 5 of Course Project Instructions)
-
-TableMeanSd <- ExtractMeanObs(TidyTable)
-
-XTable <- CreateXTab(TableMeanSd)
-
-
-
-###*********************************************************************************
-
-### functions required:
-
-functions for reading tables:
-
-ReadTrain <- function()
-
-    {subject_train<<-read.table("subject_train.txt")
-	X_train<<-read.table("X_train.txt")
-	y_train<<-read.table("y_train.txt")
-    }
-
-ReadTest <- function()
-
-    {subject_test<<-read.table("subject_test.txt")
-	X_test<<-read.table("X_test.txt")
-	y_test<<-read.table("y_test.txt")
-    }
-
-
-VarNames <- function()
-
-    {varNames<<-read.table("features.txt")
-	}
-
+```{} 
+    testTable <- cbind(subject_test,y_test,"test",X_test)
+    colnames(testTable) <- c("subject","y","group" ,colnames(testTable[,-(1:3)]))
     
-###***********************************************************************
+    trainTable <- cbind(subject_train,y_train,"train",X_train)
+    colnames(trainTable) <- c("subject","y", "group",colnames(trainTable[,-(1:3)]))
     
-functions for labeling activities :
+    SumTable <- rbind(testTable,trainTable)
+```
 
-activityConv <- function(x)
+**Extract only the measurements on the mean and standard deviation for each measurement.**  
+*section: Extracting only the measurements on the mean and standard deviation for each measurement*    
+   
 
-    {switch(x,"1"="WALKING","2"="WALKING_UPSTAIRS","3"="WALKING_DOWNSTAIRS",
-			"4"="SITTING","5"="STANDING","6"="LAYING")
-	}
+* extract means and standard deviation columns:  
 
-    
-###***********************************************************************
+```{}  
+        newColNames <- gsub("[Mm][Ee][Aa][Nn]","Mean",newColNames)
+        newColNames <- gsub("[Ss][Tt][Dd]","Std",newColNames)
+```
+* select those columns from tidy data table:
+  
+```{}       
+        colnames(TidyTable) <- newColNames
+```
 
-function for extraction of mean- and sd-observations/varaibles only (point 4 of Course Project Instructions) :
+**Uses descriptive activity names to name the activities in the data set**  
+*section: Use descriptive activity names to name the activities in the data set*
 
-ExtractMeanObs <- function(SumTable)
+* create function for activity variable conversion:
 
-    {Mean <- !colnames(SumTable)==sub(".*mean", "", colnames(SumTable))
-	Sd <- !colnames(SumTable)==sub(".*std", "", colnames(SumTable))
-	ObsSelect <- Mean | Sd
-	SumTable <- cbind(SumTable[,c("subject","group","activity","y")],SumTable[,ObsSelect])
-	}
+```{}      
+        activityConv <- function(x){
+              switch(x,"1"="WALKING","2"="WALKING_UPSTAIRS","3"="WALKING_DOWNSTAIRS","4"  
+              ="SITTING","5"="STANDING","6"="LAYING")}
+```
+* apply function on tidy data table:
 
-    
-###***********************************************************************
+```{} 
+        TidyTable$activity <- sapply(TidyTable$y,activityConv)
+```
 
-function for calculation of second tidy data set, creating an Xtable which states the average of each variable for each activity and each subject (point 5 of Course Project Instructions) :
+**Appropriately label the data set with descriptive variable names.**
 
-CreateXTab <- function(TableMeanSd)
-    
-    {ActivityList <- split(TableMeanSd[,-(1:4)],TableMeanSd[,"activity"])
-	ActivityMeans <- sapply(ActivityList,colMeans)
+* variable names from feature.txt are already assigned to X_test and X_train in the beginning *(section labeling data)*:
 
-	SubjectList <- split(TableMeanSd[,-(1:4)],TableMeanSd[,"subject"])
-	SubjectMeans <- sapply(SubjectList,colMeans)
+```{}       
+        colnames(X_test) <- varNames[,2]
+        colnames(X_train) <- varNames[,2]
+```        
+* variable names are further cleaned for better names by erasing confusing signs *(section Appropriately labeling the data set with descriptive variable names)*:
 
-	colnames(SubjectMeans) <- paste("subject",colnames(SubjectMeans))
+```{}        
+        newColNames <- gsub("[(|)|,|-]","",colnames(TidyTable))
+        colnames(TidyTable) <- newColNames  
+```
 
-	XTable <- cbind(ActivityMeans,SubjectMeans)
-	XTable
-	}
+**Create a second, independent tidy data set with the average of each variable for each activity and each subject.**  
+*section: Create a second, independent tidy data set with the average of each variable for each activity and each subject*  
+*requires package reshape2*
+
+* creating new dataset with activity and subject as id-variables:
+
+```{}        
+        MeltedData <- melt(TidyTable[,-(2:3)],id=c("activity","subject"))
+```
+* creating dataset with average of each variable for each activity, each subject and both togther
+
+```{} 
+        ActivityMeans <- dcast(MeltedData,activity~variable,mean,na.rm=T)
+
+        SubjectMeans <- dcast(MeltedData,subject~variable,mean,na.rm=T)
+
+        ActivitySubjectMeans <- dcast(MeltedData,activity+subject~variable,mean,na.rm=T)
+```

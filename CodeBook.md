@@ -1,39 +1,63 @@
-Steps to run the code are describe in the README.md of this GiHub Repo
+## Steps to run the code are describe in the README.md of this GiHub Repo
 
-variables:
+### Dataset variable
 
-subject_train:  raw subject_train data (created by function ReadTrain)
+subject:        variable for subject id
+    levels: 1 to 30
+    
+group:          variable indicating test or train group belonging
+    levels: * test
+            * train
+    
+y:              id variable for activity
+    levels: 1 to 6
+    
+activity:       variable with descriptive activity names (generated from variable y)
+    levels: * WALKING
+            * WALKING_UPSTAIRS
+            * WALKING_DOWNSTAIRS
+			* SITTING
+            * STANDING
+            * LAYING
 
-X_train:        raw X_train data (created by function ReadTrain)
+measurement variables:
+    tBodyAcc-XYZ, tGravityAcc-XYZ, tBodyAccJerk-XYZ, tBodyGyro-XYZ, tBodyGyroJerk-XYZ
+    tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag
+    fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccMag, fBodyAccJerkMag       
 
-y_train:        raw Y_train data (created by function ReadTrain)
+    
+### Code variables:
 
+subject_train:  raw subject_train data (read from folder)
 
+X_train:        raw X_train data (read from folder)
 
-subject_test:   raw subject_test data (created by function ReadTest)
-
-X_test:         raw X_test data (created by function ReadTest)
-
-y_test:         raw y_test data (created by function ReadTest)
-
-
-
-varNames:       raw names of variable (measurements) (created by function VarNames)   
+y_train:        raw Y_train data (read from folder)
 
 
-testTable:      tidy test data only (created in worksheet)
+subject_test:   raw subject_test data (read from folder)
+
+X_test:         raw X_test data (read from folder)
+
+y_test:         raw y_test data (read from folder)
 
 
-trainTable:     tidy train data only (created in worksheet)
+varNames:       raw names of variable (measurements) (read from folder)   
 
+testTable:      tidy test data only (created in worksheet, contains subject activity and group information in addition to the variables)
+    
+trainTable:     tidy train data only (created in worksheet, contains subject activity and group information in addition to the variables)
+    
+SumTable:       tidy train and test data and labeled activity column (created in worksheet)
 
-SumTable:       tidy data train and test data and labeled activity column (created in worksheet)
+TidyTable:      like SumTable with reordered columns, descriptive activity names and Appropriately labeled variables(created in worksheet)
 
-
-TidyTable:      like SumTable with reordered columns (created in worksheet)
-
-
-TableMeanSd:    similar to Tidy Table but non-mean and non-std measurements are removed (created by function ExtractMeanObs)
-
-
-XTable:         tidy data set with the average of each variable for each activity and each subject (created by function CreateXTab)
+    
+MeltedData:     TadyTable data ordered for id variables "activity" and "subject" with melt() - function from package reshape 2
+ 
+ActivityMeans:  average of each variable for each activity level, calculated with dcast() - function 
+   
+SubjectMeans:   average of each variable for each subject id, calculated with dcast() - function
+    
+ActivitySubjectMeans:   ActivityMeans and SubjectMeans combined
+   
