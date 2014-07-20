@@ -43,10 +43,11 @@ information where to find the code in the **run_analysis.R** file are given by t
               switch(x,"1"="WALKING","2"="WALKING_UPSTAIRS","3"="WALKING_DOWNSTAIRS","4"  
               ="SITTING","5"="STANDING","6"="LAYING")}
 ```
-* apply function on tidy data table:
+* apply function on data:
 
 ```{} 
-        TidyTable$activity <- sapply(TidyTable$y,activityConv)
+        activity <- sapply(TidyTable$y,activityConv)
+        TidyTable <- cbind(activity, TidyTable)
 ```
 
 **Appropriately label the data set with descriptive variable names.**
@@ -71,7 +72,7 @@ information where to find the code in the **run_analysis.R** file are given by t
 * creating new dataset with activity and subject as id-variables:
 
 ```{}        
-        MeltedData <- melt(TidyTable[,-(2:3)],id=c("activity","subject"))
+        MeltedData <- melt(TidyTable[,-(3:4)],id=c("activity","subject"))
 ```
 * creating dataset with average of each variable for each activity, each subject and both togther
 

@@ -51,28 +51,31 @@
     MeanAndStdCol[1:3] <- TRUE #preserving the first three columns where activity, group and subject values are stored
     TidyTable <- SumTable[,MeanAndStdCol]    
     
-### Uses descriptive activity names to name the activities in the data set    
+### Use descriptive activity names to name the activities in the data set    
     activityConv <- function(x){
 	switch(x,"1"="WALKING","2"="WALKING_UPSTAIRS","3"="WALKING_DOWNSTAIRS",
 			"4"="SITTING","5"="STANDING","6"="LAYING")
 	}
     
-    TidyTable$activity <- sapply(TidyTable$y,activityConv)
+    activity <- sapply(TidyTable$y,activityConv)
+    TidyTable <- cbind(activity, TidyTable)
+  
 
+    
 ### Appropriately labeling the data set with descriptive variable names.     
    newColNames <- gsub("[(|)|,|-]","",colnames(TidyTable))
    newColNames <- gsub("[Mm][Ee][Aa][Nn]","Mean",newColNames)
    newColNames <- gsub("[Ss][Tt][Dd]","Std",newColNames)
    colnames(TidyTable) <- newColNames
  
-### Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 
+### Create a second, independent tidy data set with the average of each variable for each activity and each subject. 
 
-    MeltedData <- melt(TidyTable[,-(2:3)],id=c("activity","subject"))
+    MeltedData <- melt(TidyTable[,-(3:4)],id=c("activity","subject"))
     ActivityMeans <- dcast(MeltedData,activity~variable,mean,na.rm=T)
     SubjectMeans <- dcast(MeltedData,subject~variable,mean,na.rm=T)
     ActivitySubjectMeans <- dcast(MeltedData,activity+subject~variable,mean,na.rm=T)
 
-### Writind data
+### Writing data
     write.table(SubjectMeans,file="SubjectMeans.txt",sep=";",row.names=F)
     write.table(ActivityMeans,file="ActivityMeans.txt",sep=";",row.names=F)
     write.table(ActivitySubjectMeans,file="ActivitySubjectMeans.txt",sep=";",row.names=F)
