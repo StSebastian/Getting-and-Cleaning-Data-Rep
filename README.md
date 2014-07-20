@@ -1,6 +1,7 @@
-# Getting and Cleaning Data: Peer Assessments  
-### Steps to run the code are described below 
-
+## Getting and Cleaning Data: Peer Assessment
+## script
+  
+Steps to run the code are described below  
 information where to find the code in the **run_analysis.R** file are given by the *section-information*
 
 **Merges the training and the test sets to create one data set.**  

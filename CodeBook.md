@@ -1,6 +1,9 @@
-## Steps to run the code are describe in the README.md of this GiHub Repo
+## Getting and Cleaning Data: Peer Assessment  
+## code book
 
-### Dataset variable
+Steps to run the code are describe in the README.md of this GiHub repo
+
+**Dataset variable**
 
 subject:        variable for subject id
     levels: 1 to 30
@@ -26,7 +29,7 @@ measurement variables:
     fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccMag, fBodyAccJerkMag       
 
     
-### Code variables:
+**Code variables:**
 
 subject_train:  raw subject_train data (read from folder)
 
